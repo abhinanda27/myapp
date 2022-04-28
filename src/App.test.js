@@ -1,33 +1,18 @@
 import React from "react";
-import ReactDOM from "react-dom";
-import { act } from "react-dom/test-utils";
-import { expect } from "chai";
-var jsdom = require("mocha-jsdom");
-
-global.document = jsdom({
-  url: "http://localhost:5000/"
+import {configure, shallow} from "enzyme";
+import chai, {expect} from "chai";
+import chaiEnzyme from "chai-enzyme";
+import Adapter from "enzyme-adapter-react-16";
+import App from "./App.js";
+import "./setupTests"
+configure({
+   adapter: new Adapter()
 });
-
-import App from "./App";
-
-let rootContainer;
-
-beforeEach(() => {
-  rootContainer = document.createElement("div");
-  document.body.appendChild(rootContainer);
-});
-
-afterEach(() => {
-  document.body.removeChild(rootContainer);
-  rootContainer = null;
-});
-
-describe("App Component Testing", () => {
-  it("Renders Login Title", () => {
-    act(() => {
-      ReactDOM.render(<App />, rootContainer);
-    });
-    const h1 = rootContainer.querySelector("h1");
-    expect(h1.textContent).to.equal("Hello World");
-  });
+describe("Testin <App/> Component", () => {
+   it("App renders a message", () => {
+      const wrapper = shallow(<App />);
+      const message = <p>Edit <code>src/App.js</code> and save to   reload.</p>;
+      expect(wrapper).to.contain(message);
+   });
+   chai.use(chaiEnzyme());
 });
